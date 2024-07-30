@@ -25,10 +25,11 @@ public class Carro implements Serializable{
 		this.id = this.contador++;
 	}
 
-	private Carro(int avaliacao, double preco, long km, CategoriaEnum categoria, String marca, String modelo,
+	private Carro(int id, int avaliacao, double preco, long km, CategoriaEnum categoria, String marca, String modelo,
 			String anoFabricacao, String cor, CombustivelEnum tipoCombustivel, Boolean destaque, Boolean lancamento,
 			Boolean oferta) {
 		this();
+		this.id = id;
 		this.avaliacao = avaliacao;
 		this.preco = preco;
 		this.km = km;
@@ -106,6 +107,7 @@ public class Carro implements Serializable{
 	
 	
 	public static class Builder {
+		private int id;
 		private int avaliacao;
 		private double preco;
 		private long km;
@@ -120,6 +122,7 @@ public class Carro implements Serializable{
 		private Boolean oferta;
 		
 		public Builder() {
+			this.id = 0;
 			this.avaliacao = 0;
 			this.preco = 0.0;
 			this.km = 0;
@@ -131,6 +134,11 @@ public class Carro implements Serializable{
 			this.destaque = false;
 			this.lancamento = false;
 			this.oferta = false;
+		}
+		
+		public Builder id(int id) {
+			this.id = id;
+			return this;
 		}
 		
 		public Builder avaliacao(int avaliacao) {
@@ -158,8 +166,18 @@ public class Carro implements Serializable{
 			return this;
 		}
 		
+		public Builder modelo(String modelo) {
+			this.modelo = modelo;
+			return this;
+		}
+		
 		public Builder anoFabricacao(String anoFabricacao) {
 			this.anoFabricacao = anoFabricacao;
+			return this;
+		}
+		
+		public Builder cor(String cor) {
+			this.cor = cor;
 			return this;
 		}
 		
@@ -184,7 +202,7 @@ public class Carro implements Serializable{
 		}
 		
 		public Carro build() {
-			return new Carro(this.avaliacao, this.preco, this.km, this.categoria, this.marca, this.modelo, 
+			return new Carro(this.id, this.avaliacao, this.preco, this.km, this.categoria, this.marca, this.modelo, 
 					this.anoFabricacao, this.cor, this.tipoCombustivel, this.destaque, this.lancamento, this.oferta);
 		}
 	}
