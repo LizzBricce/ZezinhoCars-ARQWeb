@@ -8,7 +8,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.edu.ifsp.arq.arqweb1.model.Tarefa;
 import model.Carro;
+import model.CategoriaEnum;
+import model.CombustivelEnum;
 
 public class CarroDao {
 	
@@ -23,12 +26,12 @@ public class CarroDao {
 			pw.close();
 			fw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	public List<Carro> getCarros() {
+
 		List<Carro> carros = new ArrayList<>();
 
 		try {
@@ -45,17 +48,15 @@ public class CarroDao {
 											.avaliacao(Integer.parseInt(partes[1]))
 											.preco(Double.parseDouble(partes[2]))
 											.km(Long.parseLong(partes[3]))
-											//.categoria(Integer.parseInt(partes[4]))
+											.categoria(CategoriaEnum.values()[Integer.parseInt(partes[4])])
 											.marca(partes[5])
 											.modelo(partes[6])
 											.anoFabricacao(partes[7])
-											.cor(partes[8]);
-											//.tipoCombustivel()
-											//.destaque(false)
-											//.lancamento(false)
-											//.oferta();
-											
-											
+											.cor(partes[8])
+											.tipoCombustivel(CombustivelEnum.values()[Integer.parseInt(partes[9])])
+											.destaque(Integer.parseInt(partes[10]) == 1)
+											.lancamento(Integer.parseInt(partes[11]) == 1)
+											.oferta(Integer.parseInt(partes[12]) == 1);
 					
 					carros.add(builder.build());
 				}
@@ -65,10 +66,60 @@ public class CarroDao {
 			fr.close();
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return carros;
+	}
+	
+	public Carro getById(int id) {
+		List<Carro> carros = getCarros();
+
+		for (Carro carro : carros) {
+			if (carro.getId() == id) {
+				return carro;
+			}
+		}
+		
+		return null;
+	}
+	
+	
+	public void editCarro(Carro carro) {
+		List<Carro> carros = getCarros();
+
+		for (Carro c : carros) {
+			if (c.getId() == carro.getId()) {
+				c.setAnoFabricacao(carro.getAnoFabricacao());
+				c.setCategoria(carro.getCategoria());
+				c.setAvaliacao(carro.getAvaliacao());
+				c.setCor(carro.getCor());
+				c.setDestaque(carro.getDestaque());
+				c.setKm(carro.getKm());
+				c.setLancamento(carro.getLancamento());
+				c.setMarca(carro.getMarca());
+				c.setModelo(carro.getModelo());
+				c.setOferta(carro.getOferta());
+				c.setPreco(carro.getPreco());
+				c.setTipoCombustivel(carro.getTipoCombustivel());
+				break;
+			}
+		}
+		
+		writeCarros(carros);
+	}
+	
+	private void writeCarros(List<Carro> carros) {
+		try {
+			FileWriter fw = new FileWriter(arquivoCSV, false);
+			PrintWriter pw = new PrintWriter(fw);
+			for(Carro c : carros) {
+				pw.println(c);
+			}			
+			pw.close();
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

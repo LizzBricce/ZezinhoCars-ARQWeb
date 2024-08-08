@@ -105,7 +105,57 @@ public class Carro implements Serializable{
 		return oferta;
 	}
 	
-	
+
+	public void setAvaliacao(int avaliacao) {
+		this.avaliacao = avaliacao;
+	}
+
+	public void setPreco(double preco) {
+		this.preco = preco;
+	}
+
+	public void setKm(long km) {
+		this.km = km;
+	}
+
+	public void setCategoria(CategoriaEnum categoria) {
+		this.categoria = categoria;
+	}
+
+	public void setTipoCombustivel(CombustivelEnum tipoCombustivel) {
+		this.tipoCombustivel = tipoCombustivel;
+	}
+
+	public void setMarca(String marca) {
+		this.marca = marca;
+	}
+
+	public void setModelo(String modelo) {
+		this.modelo = modelo;
+	}
+
+	public void setAnoFabricacao(String anoFabricacao) {
+		this.anoFabricacao = anoFabricacao;
+	}
+
+	public void setCor(String cor) {
+		this.cor = cor;
+	}
+
+	public void setDestaque(Boolean destaque) {
+		this.destaque = destaque;
+	}
+
+	public void setLancamento(Boolean lancamento) {
+		this.lancamento = lancamento;
+	}
+
+	public void setOferta(Boolean oferta) {
+		this.oferta = oferta;
+	}
+
+
+
 	public static class Builder {
 		private int id;
 		private int avaliacao;
