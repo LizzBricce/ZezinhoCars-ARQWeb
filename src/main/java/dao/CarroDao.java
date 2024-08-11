@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.edu.ifsp.arq.arqweb1.model.Tarefa;
 import model.Carro;
 import model.CategoriaEnum;
 import model.CombustivelEnum;
@@ -17,12 +16,11 @@ public class CarroDao {
 	
 	private final String arquivoCSV = "C:\\Users\\lucas\\dev\\dados\\carros.csv";
 
-	
 	public void addCarro(Carro c) {
 		try {
 			FileWriter fw = new FileWriter(arquivoCSV, true);
 			PrintWriter pw = new PrintWriter(fw);
-			pw.println(c);
+			pw.println(c.toCsv());
 			pw.close();
 			fw.close();
 		} catch (IOException e) {
@@ -31,9 +29,7 @@ public class CarroDao {
 	}
 	
 	public List<Carro> getCarros() {
-
 		List<Carro> carros = new ArrayList<>();
-
 		try {
 			FileReader fr = new FileReader(arquivoCSV);
 			BufferedReader reader = new BufferedReader(fr);
@@ -43,22 +39,23 @@ public class CarroDao {
 				String[] partes = linha.split(";");
 				if (partes.length == 13) {
 					
-					Carro.Builder builder = new Carro.Builder()
-											.id(Integer.parseInt(partes[0]))
-											.avaliacao(Integer.parseInt(partes[1]))
-											.preco(Double.parseDouble(partes[2]))
-											.km(Long.parseLong(partes[3]))
-											.categoria(CategoriaEnum.values()[Integer.parseInt(partes[4])])
-											.marca(partes[5])
-											.modelo(partes[6])
-											.anoFabricacao(partes[7])
-											.cor(partes[8])
-											.tipoCombustivel(CombustivelEnum.values()[Integer.parseInt(partes[9])])
-											.destaque(Integer.parseInt(partes[10]) == 1)
-											.lancamento(Integer.parseInt(partes[11]) == 1)
-											.oferta(Integer.parseInt(partes[12]) == 1);
+					Carro carro = new Carro.Builder()
+						.id(Integer.parseInt(partes[0]))
+						.avaliacao(Integer.parseInt(partes[1]))
+						.preco(Double.parseDouble(partes[2]))
+						.km(Long.parseLong(partes[3]))
+						.categoria(CategoriaEnum.values()[Integer.parseInt(partes[4])])
+						.marca(partes[5])
+						.modelo(partes[6])
+						.anoFabricacao(partes[7])
+						.cor(partes[8])
+						.tipoCombustivel(CombustivelEnum.values()[Integer.parseInt(partes[9])])
+						.destaque(Integer.parseInt(partes[10]) == 1)
+						.lancamento(Integer.parseInt(partes[11]) == 1)
+						.oferta(Integer.parseInt(partes[12]) == 1)
+						.build();
 					
-					carros.add(builder.build());
+					carros.add(carro);
 				}
 			}
 
@@ -83,7 +80,6 @@ public class CarroDao {
 		
 		return null;
 	}
-	
 	
 	public void editCarro(Carro carro) {
 		List<Carro> carros = getCarros();
@@ -114,7 +110,7 @@ public class CarroDao {
 			FileWriter fw = new FileWriter(arquivoCSV, false);
 			PrintWriter pw = new PrintWriter(fw);
 			for(Carro c : carros) {
-				pw.println(c);
+				pw.println(c.toCsv());
 			}			
 			pw.close();
 			fw.close();

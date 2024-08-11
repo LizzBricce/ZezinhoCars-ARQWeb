@@ -3,7 +3,7 @@ package model;
 import java.io.Serializable;
 
 public class Carro implements Serializable{
-	private static final long serialVersionUID = 1L;
+	private static long serialVersionUID = 1L;
 	private static int contador = 0;
 		
 	private int id;	
@@ -22,13 +22,30 @@ public class Carro implements Serializable{
 	// fotos
 	
 	private Carro() {
-		this.id = this.contador++;
+		this.id = ++this.contador;
 	}
 
-	private Carro(int id, int avaliacao, double preco, long km, CategoriaEnum categoria, String marca, String modelo,
+	private Carro(int avaliacao, double preco, long km, CategoriaEnum categoria, String marca, String modelo,
 			String anoFabricacao, String cor, CombustivelEnum tipoCombustivel, Boolean destaque, Boolean lancamento,
 			Boolean oferta) {
 		this();
+		this.avaliacao = avaliacao;
+		this.preco = preco;
+		this.km = km;
+		this.categoria = categoria;
+		this.marca = marca;
+		this.modelo = modelo;
+		this.anoFabricacao = anoFabricacao;
+		this.cor = cor;
+		this.tipoCombustivel = tipoCombustivel;
+		this.destaque = destaque;
+		this.lancamento = lancamento;
+		this.oferta = oferta;
+	}
+	
+	private Carro(int id, int avaliacao, double preco, long km, CategoriaEnum categoria, String marca, String modelo,
+			String anoFabricacao, String cor, CombustivelEnum tipoCombustivel, Boolean destaque, Boolean lancamento,
+			Boolean oferta) {
 		this.id = id;
 		this.avaliacao = avaliacao;
 		this.preco = preco;
@@ -43,6 +60,12 @@ public class Carro implements Serializable{
 		this.lancamento = lancamento;
 		this.oferta = oferta;
 	}
+	
+	public String toCsv() {
+        return id + ";" + avaliacao + ";" + preco + ";" + km + ";" + categoria.ordinal() + ";" + marca + ";" + modelo + ";" + 
+               anoFabricacao + ";" + cor + ";" + tipoCombustivel.ordinal() + ";" + (destaque ? 1 : 0) + ";" + 
+               (lancamento ? 1 : 0) + ";" + (oferta ? 1 : 0);
+    }
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -252,8 +275,14 @@ public class Carro implements Serializable{
 		}
 		
 		public Carro build() {
-			return new Carro(this.id, this.avaliacao, this.preco, this.km, this.categoria, this.marca, this.modelo, 
+			if(this.id != 0) {
+				return new Carro(this.id, this.avaliacao, this.preco, this.km, this.categoria, this.marca, this.modelo, 
+						this.anoFabricacao, this.cor, this.tipoCombustivel, this.destaque, this.lancamento, this.oferta);
+			}
+			
+			return new Carro(this.avaliacao, this.preco, this.km, this.categoria, this.marca, this.modelo, 
 					this.anoFabricacao, this.cor, this.tipoCombustivel, this.destaque, this.lancamento, this.oferta);
+			
 		}
 	}
 	
