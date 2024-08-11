@@ -3,6 +3,12 @@ package controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import dao.UserDao;
 import model.User;
 
@@ -118,7 +124,7 @@ public class UserController extends HttpServlet {
         String senha = request.getParameter("senha");
         boolean adm = request.getParameter("adm") != null;
 
-        Builder builder = new User.Builder()
+        User.Builder builder = new User.Builder()
                 .nome(nome)
                 .email(email)
                 .senha(senha)

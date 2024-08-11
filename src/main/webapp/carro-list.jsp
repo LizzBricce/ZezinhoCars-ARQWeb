@@ -4,7 +4,7 @@
     <title>Lista de Carros</title>
 </head>
 <body>
-    <h2>Lista de Carros</h2>
+    <h2>Lista de Carros ${user.email}</h2>
     
     
     <table border="1">

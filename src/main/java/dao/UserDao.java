@@ -12,7 +12,7 @@ import model.User;
 
 public class UserDao {
 
-	private final String arquivoCSV = "C:\\Users\\lucas\\dev\\dados\\carros.csv";
+	private final String arquivoCSV = "C:\\Users\\lucas\\dev\\dados\\users.csv";
 	
     public void addUser(User user) {
         try {
@@ -119,7 +119,8 @@ public class UserDao {
         List<User> users = getUsers();
 
         for (User user : users) {
-            if (user.getEmail().equals(email) && user.getSenha().equals((hashSenha(senha))) {
+        	System.out.println(user.toCsv());
+            if (user.getEmail().equals(email) && user.getSenha().equals(User.hashSenha(User.hashSenha(senha)))) {
                 return user;
             }
         }
