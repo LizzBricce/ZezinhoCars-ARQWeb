@@ -1,6 +1,8 @@
 package model;
 
 import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -52,6 +54,23 @@ public class User implements Serializable {
 		return adm;
 	}
 	
+	public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public void setAdm(Boolean adm) {
+        this.adm = adm;
+    }
+
+	
 	public static class Builder {
 		private String nome;
 		private String email;
@@ -90,5 +109,21 @@ public class User implements Serializable {
 		}
 	}
 	
+    public String toCsv() {
+        return id + ";" + nome + ";" + email + ";" + senha + ";" + adm;
+    }
+    private String hashSenha(String senha) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = md.digest(senha.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashBytes) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Erro ao criptografar a senha", e);
+        }
+    }
 	
 }
