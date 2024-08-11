@@ -119,7 +119,6 @@ public class UserDao {
         List<User> users = getUsers();
 
         for (User user : users) {
-        	System.out.println(user.toCsv());
             if (user.getEmail().equals(email) && user.getSenha().equals(User.hashSenha(User.hashSenha(senha)))) {
                 return user;
             }

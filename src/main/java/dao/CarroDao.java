@@ -53,8 +53,7 @@ public class CarroDao {
                             .destaque(Integer.parseInt(partes[10]) == 1)
                             .lancamento(Integer.parseInt(partes[11]) == 1)
                             .oferta(Integer.parseInt(partes[12]) == 1)
-                            .imagem(partes[13]);  // Novo campo para a imagem Base64
-
+                            .imagem(partes[13]); 
                     carros.add(builder.build());
                 }
             }
