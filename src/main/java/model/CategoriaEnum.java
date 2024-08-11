@@ -2,7 +2,7 @@ package model;
 
 public enum CategoriaEnum {
 	SUV(0),
-	HACTCHBACK(1),
+	HATCHBACK(1),
 	SEDAN(2);
 	
 	private final int id;

@@ -1,88 +1,157 @@
 package controller;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.Part;
 import dao.CarroDao;
 import model.Carro;
+import model.Carro.Builder;
 import model.CategoriaEnum;
 import model.CombustivelEnum;
 
 @WebServlet("/carro")
+@MultipartConfig(maxFileSize = 1024 * 1024 * 5)
 public class CarroController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private CarroDao carroDao;
 
     public CarroController() {
-        this.carroDao = new CarroDao();
+        super();
+        carroDao = new CarroDao();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String action = request.getParameter("action");
-        
-        if ("list".equals(action)) {
-            List<Carro> carros = carroDao.getCarros();
-            request.setAttribute("carros", carros);
-            request.getRequestDispatcher("/listaCarros.jsp").forward(request, response);
-        } else if ("edit".equals(action)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            Carro carro = carroDao.getById(id);
-            request.setAttribute("carro", carro);
-            request.getRequestDispatcher("/editaCarro.jsp").forward(request, response);
-        } else if ("delete".equals(action)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            Carro carro = carroDao.getById(id);
-            if (carro != null) {
-                carroDao.editCarro(carro);
-            }
-            response.sendRedirect("carro?action=list");
+
+        if (action == null || action.equals("")) {
+            action = "list";
+        }
+
+        switch (action) {
+            case "list":
+                listarCarros(request, response);
+                break;
+            case "edit":
+                mostrarFormularioEdicao(request, response);
+                break;
+            case "delete":
+                deletarCarro(request, response);
+                break;
+            default:
+                listarCarros(request, response);
+                break;
         }
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String action = request.getParameter("action");
-        
-        if ("add".equals(action)) {
-            Carro carro = new Carro.Builder()
-                .avaliacao(Integer.parseInt(request.getParameter("avaliacao")))
-                .preco(Double.parseDouble(request.getParameter("preco")))
-                .km(Long.parseLong(request.getParameter("km")))
-                .categoria(CategoriaEnum.values()[Integer.parseInt(request.getParameter("categoria"))])
-                .marca(request.getParameter("marca"))
-                .modelo(request.getParameter("modelo"))
-                .anoFabricacao(request.getParameter("anoFabricacao"))
-                .cor(request.getParameter("cor"))
-                .tipoCombustivel(CombustivelEnum.values()[Integer.parseInt(request.getParameter("tipoCombustivel"))])
-                .destaque(request.getParameter("destaque") != null ? request.getParameter("destaque").equals("on") : false)
-                .lancamento(request.getParameter("lancamento") != null ? request.getParameter("lancamento").equals("on") : false)
-                .oferta(request.getParameter("oferta") != null ? request.getParameter("oferta").equals("on") : false)
-                .build();
-            carroDao.addCarro(carro);
-            response.sendRedirect("carro?action=list");
-        } else if ("edit".equals(action)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            Carro carro = new Carro.Builder()
+
+        if (action == null || action.equals("")) {
+            action = "add";
+        }
+
+        switch (action) {
+            case "add":
+                adicionarCarro(request, response);
+                break;
+            case "edit":
+                atualizarCarro(request, response);
+                break;
+            default:
+                listarCarros(request, response);
+                break;
+        }
+    }
+
+    private void listarCarros(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<Carro> carros = carroDao.getCarros();
+        request.setAttribute("carros", carros);
+        request.getRequestDispatcher("carro-list.jsp").forward(request, response);
+    }
+
+    private void mostrarFormularioEdicao(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Carro carro = carroDao.getById(id);
+        request.setAttribute("carro", carro);
+        request.getRequestDispatcher("carro-form.jsp").forward(request, response);
+    }
+
+    private void adicionarCarro(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Carro carro = construirCarroAPartirDoRequest(request);
+        System.out.println(carro.toString());
+        carroDao.addCarro(carro);
+        response.sendRedirect("carro?action=list");
+    }
+
+    private void atualizarCarro(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Carro carro = construirCarroAPartirDoRequest(request);
+        carroDao.editCarro(carro);
+        response.sendRedirect("carro?action=list");
+    }
+
+    private void deletarCarro(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Carro carro = carroDao.getById(id);
+        if (carro != null) {
+            carroDao.deleteCarro(id);
+        }
+        response.sendRedirect("carro?action=list");
+    }
+
+    private Carro construirCarroAPartirDoRequest(HttpServletRequest request) throws IOException, ServletException {
+        int id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : 0;
+        int avaliacao = Integer.parseInt(request.getParameter("avaliacao"));
+        double preco = Double.parseDouble(request.getParameter("preco"));
+        long km = Long.parseLong(request.getParameter("km"));
+        CategoriaEnum categoria = CategoriaEnum.values()[Integer.parseInt(request.getParameter("categoria"))];
+        String marca = request.getParameter("marca");
+        String modelo = request.getParameter("modelo");
+        String anoFabricacao = request.getParameter("anoFabricacao");
+        String cor = request.getParameter("cor");
+        CombustivelEnum tipoCombustivel = CombustivelEnum.values()[Integer.parseInt(request.getParameter("tipoCombustivel"))];
+        boolean destaque = request.getParameter("destaque") != null;
+        boolean lancamento = request.getParameter("lancamento") != null;
+        boolean oferta = request.getParameter("oferta") != null;
+
+        Part filePart = request.getPart("imagem");
+        String imagemBase64 = null;
+        if (filePart != null && filePart.getSize() > 0) {
+            InputStream fileContent = filePart.getInputStream();
+            byte[] imagemBytes = fileContent.readAllBytes();
+            imagemBase64 = Base64.getEncoder().encodeToString(imagemBytes);
+        }
+
+        Builder builder = new Carro.Builder()
                 .id(id)
-                .avaliacao(Integer.parseInt(request.getParameter("avaliacao")))
-                .preco(Double.parseDouble(request.getParameter("preco")))
-                .km(Long.parseLong(request.getParameter("km")))
-                .categoria(CategoriaEnum.valueOf(request.getParameter("categoria")))
-                .marca(request.getParameter("marca"))
-                .modelo(request.getParameter("modelo"))
-                .anoFabricacao(request.getParameter("anoFabricacao"))
-                .cor(request.getParameter("cor"))
-                .tipoCombustivel(CombustivelEnum.valueOf(request.getParameter("tipoCombustivel")))
-                .destaque(Boolean.parseBoolean(request.getParameter("destaque")))
-                .lancamento(Boolean.parseBoolean(request.getParameter("lancamento")))
-                .oferta(Boolean.parseBoolean(request.getParameter("oferta")))
-                .build();
-            carroDao.editCarro(carro);
-            response.sendRedirect("carro?action=list");
-        }
+                .avaliacao(avaliacao)
+                .preco(preco)
+                .km(km)
+                .categoria(categoria)
+                .marca(marca)
+                .modelo(modelo)
+                .anoFabricacao(anoFabricacao)
+                .cor(cor)
+                .tipoCombustivel(tipoCombustivel)
+                .destaque(destaque)
+                .lancamento(lancamento)
+                .oferta(oferta)
+                .imagem(imagemBase64);
+
+        return builder.build();
     }
 }

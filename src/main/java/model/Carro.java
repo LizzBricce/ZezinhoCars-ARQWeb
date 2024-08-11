@@ -19,7 +19,7 @@ public class Carro implements Serializable{
 	private Boolean destaque;
 	private Boolean lancamento;
 	private Boolean oferta;
-	// fotos
+	private String imagemBase64;
 	
 	private Carro() {
 		this.id = ++this.contador;
@@ -27,7 +27,7 @@ public class Carro implements Serializable{
 
 	private Carro(int avaliacao, double preco, long km, CategoriaEnum categoria, String marca, String modelo,
 			String anoFabricacao, String cor, CombustivelEnum tipoCombustivel, Boolean destaque, Boolean lancamento,
-			Boolean oferta) {
+			Boolean oferta, String imagemBase64) {
 		this();
 		this.avaliacao = avaliacao;
 		this.preco = preco;
@@ -41,11 +41,12 @@ public class Carro implements Serializable{
 		this.destaque = destaque;
 		this.lancamento = lancamento;
 		this.oferta = oferta;
+		this.imagemBase64 = imagemBase64;
 	}
 	
 	private Carro(int id, int avaliacao, double preco, long km, CategoriaEnum categoria, String marca, String modelo,
 			String anoFabricacao, String cor, CombustivelEnum tipoCombustivel, Boolean destaque, Boolean lancamento,
-			Boolean oferta) {
+			Boolean oferta, String imagemBase64) {
 		this.id = id;
 		this.avaliacao = avaliacao;
 		this.preco = preco;
@@ -59,13 +60,14 @@ public class Carro implements Serializable{
 		this.destaque = destaque;
 		this.lancamento = lancamento;
 		this.oferta = oferta;
+		this.imagemBase64 = imagemBase64;
 	}
 	
 	public String toCsv() {
-        return id + ";" + avaliacao + ";" + preco + ";" + km + ";" + categoria.ordinal() + ";" + marca + ";" + modelo + ";" + 
-               anoFabricacao + ";" + cor + ";" + tipoCombustivel.ordinal() + ";" + (destaque ? 1 : 0) + ";" + 
-               (lancamento ? 1 : 0) + ";" + (oferta ? 1 : 0);
-    }
+	    return id + ";" + avaliacao + ";" + preco + ";" + km + ";" + categoria.ordinal() + ";" + marca + ";" + modelo + ";" +
+	           anoFabricacao + ";" + cor + ";" + tipoCombustivel.ordinal() + ";" + (destaque ? 1 : 0) + ";" +
+	           (lancamento ? 1 : 0) + ";" + (oferta ? 1 : 0) + ";" + (imagemBase64 != null ? imagemBase64 : "");
+	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -177,7 +179,13 @@ public class Carro implements Serializable{
 		this.oferta = oferta;
 	}
 
+	 public String getImagemBase64() {
+	        return imagemBase64;
+    }
 
+    public void setImagemBase64(String imagemBase64) {
+        this.imagemBase64 = imagemBase64;
+    }
 
 	public static class Builder {
 		private int id;
@@ -193,6 +201,7 @@ public class Carro implements Serializable{
 		private Boolean destaque;
 		private Boolean lancamento;
 		private Boolean oferta;
+		private String imagemBase64;
 		
 		public Builder() {
 			this.id = 0;
@@ -207,6 +216,7 @@ public class Carro implements Serializable{
 			this.destaque = false;
 			this.lancamento = false;
 			this.oferta = false;
+			this.imagemBase64 = "";
 		}
 		
 		public Builder id(int id) {
@@ -274,14 +284,19 @@ public class Carro implements Serializable{
 			 return this;
 		}
 		
+		public Builder imagem(String imagem) {
+			this.imagemBase64 = imagem;
+			return this;
+		}
+		
 		public Carro build() {
 			if(this.id != 0) {
 				return new Carro(this.id, this.avaliacao, this.preco, this.km, this.categoria, this.marca, this.modelo, 
-						this.anoFabricacao, this.cor, this.tipoCombustivel, this.destaque, this.lancamento, this.oferta);
+						this.anoFabricacao, this.cor, this.tipoCombustivel, this.destaque, this.lancamento, this.oferta, this.imagemBase64);
 			}
 			
 			return new Carro(this.avaliacao, this.preco, this.km, this.categoria, this.marca, this.modelo, 
-					this.anoFabricacao, this.cor, this.tipoCombustivel, this.destaque, this.lancamento, this.oferta);
+					this.anoFabricacao, this.cor, this.tipoCombustivel, this.destaque, this.lancamento, this.oferta, this.imagemBase64);
 			
 		}
 	}

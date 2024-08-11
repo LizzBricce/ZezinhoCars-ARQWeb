@@ -23,9 +23,9 @@
 
         <label for="categoria">Categoria:</label>
         <select id="categoria" name="categoria" required>
-            <option value="0">SUV</option>
-            <option value="1">HATCHBACK</option>
-            <option value="2">SEDAN</option>
+            <option value="0" ${carro != null && carro.categoria == 'SUV' ? 'selected' : ''}>SUV</option>
+            <option value="1" ${carro != null && carro.categoria == 'HATCHBACK' ? 'selected' : ''}>HATCHBACK</option>
+            <option value="2" ${carro != null && carro.categoria == 'SEDAN' ? 'selected' : ''}>SEDAN</option>
         </select><br>
 
         <label for="marca">Marca:</label>
@@ -42,9 +42,9 @@
 
         <label for="tipoCombustivel">Tipo de Combustível:</label>
         <select id="tipoCombustivel" name="tipoCombustivel" required>
-            <option value="0">GASOLINA</option>
-            <option value="1">ALCOOL</option>
-            <option value="2">DISEL</option>
+            <option value="0" ${carro != null && carro.tipoCombustivel == 'GASOLINA' ? 'selected' : ''}>GASOLINA</option>
+            <option value="1" ${carro != null && carro.tipoCombustivel == 'ALCOOL' ? 'selected' : ''}>ALCOOL</option>
+            <option value="2" ${carro != null && carro.tipoCombustivel == 'DISEL' ? 'selected' : ''}>DISEL</option>
         </select><br>
 
         <label for="destaque">Destaque:</label>
@@ -56,8 +56,12 @@
         <label for="oferta">Oferta:</label>
         <input type="checkbox" id="oferta" name="oferta" ${carro != null && carro.oferta ? 'checked' : ''}><br>
         
-        <label for="imagem">Imagem do carro</label>
+        <label for="imagem">Imagem do carro:</label>
         <input type="file" id="imagem" name="imagem"><br>
+        
+        <c:if test="${carro != null && carro.imagemBase64 != null}">
+            <img src="data:image/jpeg;base64,${carro.imagemBase64}" alt="Imagem do Carro" width="200"><br>
+        </c:if>
 
         <button type="submit">${carro != null ? 'Atualizar' : 'Adicionar'}</button>
     </form>
