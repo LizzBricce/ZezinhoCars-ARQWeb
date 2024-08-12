@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<jsp:include page="templates/header.jsp" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,6 +22,32 @@
             height: 120px; /* Ajuste a altura da faixa conforme necessário */
             transform-origin: top right;
             z-index: 10; /* Garante que a faixa fique sobre a imagem */
+        }
+
+        .btn-back {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn-back:hover {
+            background-color: #0056b3;
+        }
+
+        .card-header, .card-footer {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+        
+        .text-primary {
+            color: #007bff !important;
         }
     </style>
 </head>
@@ -77,13 +104,17 @@
                         <img src="data:image/jpeg;base64,${carro.imagemBase64}" alt="Imagem do Carro" class="img-fluid rounded"/>
                         
                         <c:if test="${carro.lancamento}">                        
-                        	<img alt="lançamento" src="https://promoval.com.br/wp-content/uploads/2021/02/lancamento.png" class="badge-lancamento"/>
+                            <img alt="lançamento" src="https://promoval.com.br/wp-content/uploads/2021/02/lancamento.png" class="badge-lancamento"/>
                         </c:if>
                     </div>
                 </c:if>
             </div>
-            <div class="card-footer text-center">
-                <a href="carro?action=list" class="btn btn-primary">
+             <div class="card-footer text-center">
+                <c:if test="${user.adm}">
+                    <a href="carro?action=edit&id=${carro.id}" class="btn btn-success">Editar</a>
+                    <a href="carro?action=delete&id=${carro.id}" class="btn btn-outline-danger" onclick="return confirm('Tem certeza de que deseja excluir este carro?');">Excluir</a>
+                </c:if>
+                <a href="carro?action=list" class="btn btn-back">
                     <i class="bi bi-arrow-left"></i> Voltar
                 </a>
             </div>

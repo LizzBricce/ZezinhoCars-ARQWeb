@@ -33,19 +33,26 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-dark hover-yellow" href="home.jsp">Home</a>
+                    <a class="nav-link text-dark hover-yellow" href="carro?action=list">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark hover-yellow" href="user-form.jsp">Adicionar Usuário</a>
-                </li>
+                <c:if test="${empty user}">
+	               <li class="nav-item">
+	                   <a class="nav-link text-dark hover-yellow" href="user-form.jsp">Cadastro</a>
+	               </li>
+                </c:if>
+                <c:if test="${not empty user}">
                     <li class="nav-item">
-                        <a class="nav-link text-dark hover-yellow" href="logout.jsp">Logout</a>
+                        <a class="nav-link text-dark hover-yellow" href="logout">Logout</a>
                     </li>
+                 </c:if>
                 <c:if test="${empty user}">
                     <li class="nav-item">
                         <a class="nav-link text-dark hover-yellow" href="login.jsp">Login</a>
                     </li>
                 </c:if>
+                <li class="nav-item">
+                   <a class="nav-link text-dark hover-yellow" href="sobre.jsp">Sobre</a>
+                </li>
             </ul>
         </div>
     </nav>

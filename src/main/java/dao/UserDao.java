@@ -117,13 +117,14 @@ public class UserDao {
     
     public User authenticate(String email, String senha) {
         List<User> users = getUsers();
+        String hashedSenha = User.hashSenha(senha);
 
         for (User user : users) {
-            if (user.getEmail().equals(email) && user.getSenha().equals(User.hashSenha(User.hashSenha(senha)))) {
+            if (user.getEmail().equals(email) && user.getSenha().equals(hashedSenha)) {
                 return user;
             }
         }
-
         return null;
     }
+
 }

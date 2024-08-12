@@ -173,6 +173,11 @@ public class CarroController extends HttpServlet {
             byte[] imagemBytes = fileContent.readAllBytes();
             imagemBase64 = Base64.getEncoder().encodeToString(imagemBytes);
         }
+        
+        if(imagemBase64 == null && id != 0) {
+        	Carro infos = carroDao.getById(id);
+        	imagemBase64 = infos.getImagemBase64();
+        }
 
         Builder builder = new Carro.Builder()
                 .id(id)

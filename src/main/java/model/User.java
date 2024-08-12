@@ -112,7 +112,7 @@ public class User implements Serializable {
     public String toCsv() {
         return id + ";" + nome + ";" + email + ";" + senha + ";" + adm;
     }
-    public String hashSenha(String senha) {
+    public static String hashSenha(String senha) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = md.digest(senha.getBytes());
@@ -125,5 +125,6 @@ public class User implements Serializable {
             throw new RuntimeException("Erro ao criptografar a senha", e);
         }
     }
+
 	
 }

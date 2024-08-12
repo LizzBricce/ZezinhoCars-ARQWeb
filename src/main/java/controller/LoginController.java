@@ -31,7 +31,7 @@ public class LoginController extends HttpServlet {
         if (user != null) {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-            response.sendRedirect("user?action=list");
+            response.sendRedirect("carro?action=list");
         } else {
             request.setAttribute("errorMessage", "Email ou senha inválidos.");
             request.getRequestDispatcher("login.jsp").forward(request, response);

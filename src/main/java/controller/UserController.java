@@ -31,9 +31,6 @@ public class UserController extends HttpServlet {
         }
 
         switch (action) {
-            case "list":
-                listarUsers(request, response);
-                break;
             case "edit":
                 mostrarFormularioEdicao(request, response);
                 break;
@@ -41,7 +38,6 @@ public class UserController extends HttpServlet {
                 deletarUser(request, response);
                 break;
             default:
-                listarUsers(request, response);
                 break;
         }
     }
@@ -62,17 +58,10 @@ public class UserController extends HttpServlet {
                 atualizarUser(request, response);
                 break;
             default:
-                listarUsers(request, response);
                 break;
         }
     }
 
-    private void listarUsers(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        List<User> users = userDao.getUsers();
-        request.setAttribute("users", users);
-        request.getRequestDispatcher("user-list.jsp").forward(request, response);
-    }
 
     private void mostrarFormularioEdicao(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -89,23 +78,30 @@ public class UserController extends HttpServlet {
         String senha = request.getParameter("senha");
         Boolean adm = request.getParameter("adm") != null;
 
+        String hashedSenha = User.hashSenha(senha);
+
         User user = new User.Builder()
                 .nome(nome)
                 .email(email)
-                .senha(senha)
+                .senha(hashedSenha) 
                 .adm(adm)
                 .build();
 
         userDao.addUser(user);
-        response.sendRedirect("user?action=list");
+        response.sendRedirect("login.jsp");
     }
+
 
     private void atualizarUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         User user = construirUserAPartirDoRequest(request);
+        if (user.getSenha() != null && !user.getSenha().isEmpty()) {
+            user.setSenha(User.hashSenha(user.getSenha()));
+        }
         userDao.editUser(user);
-        response.sendRedirect("user?action=list");
+        response.sendRedirect("login.jsp");
     }
+
 
     private void deletarUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -114,7 +110,7 @@ public class UserController extends HttpServlet {
         if (user != null) {
             userDao.deleteUser(id);
         }
-        response.sendRedirect("user?action=list");
+        response.sendRedirect("login.jsp");
     }
 
     private User construirUserAPartirDoRequest(HttpServletRequest request) {
@@ -124,12 +120,15 @@ public class UserController extends HttpServlet {
         String senha = request.getParameter("senha");
         boolean adm = request.getParameter("adm") != null;
 
+        String hashedSenha = senha != null && !senha.isEmpty() ? User.hashSenha(senha) : null;
+
         User.Builder builder = new User.Builder()
                 .nome(nome)
                 .email(email)
-                .senha(senha)
+                .senha(hashedSenha)
                 .adm(adm);
 
         return builder.build();
     }
+
 }

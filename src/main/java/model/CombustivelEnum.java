@@ -1,7 +1,9 @@
 package model;
 
 public enum CombustivelEnum {
-	GASOLINA,
-	ALCOOL,
-	DISEL
+    GASOLINA,
+    ALCOOL,
+    DIESEL,
+    HIBRIDO,
+    ELETRICO
 }

@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<jsp:include page="templates/header.jsp" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +28,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <a href="carro-form.jsp" class="btn btn-primary mb-4">Adicionar Novo Carro</a>
+        <c:if test="${not empty user.email}"><a href="carro-form.jsp" class="btn btn-primary mb-4">Adicionar Novo Carro</a></c:if>
         
         <div class="section-header">Carros em Oferta</div>
         <c:choose>
@@ -42,7 +43,7 @@
                                     <p class="card-text"><span>R$ <script>
                                         document.write((${carro.preco}).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
                                     </script></span></p>
-                                    <a href="carro?action=view&id=${carro.id}" class="btn btn-primary">Ver detalhes</a>
+                                    <a href="carro?action=view&id=${carro.id}" class="btn btn-warning">Ver detalhes</a>
                                 </div>
                             </div>
                         </div>
@@ -67,7 +68,7 @@
                                     <p class="card-text"><span>R$ <script>
                                         document.write((${carro.preco}).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
                                     </script></span></p>
-                                    <a href="carro?action=view&id=${carro.id}" class="btn btn-primary">Ver detalhes</a>
+                                    <a href="carro?action=view&id=${carro.id}" class="btn btn-warning">Ver detalhes</a>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +93,7 @@
                                     <p class="card-text"><span>R$ <script>
                                         document.write((${carro.preco}).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
                                     </script></span></p>
-                                    <a href="carro?action=view&id=${carro.id}" class="btn btn-primary">Ver detalhes</a>
+                                    <a href="carro?action=view&id=${carro.id}" class="btn btn-warning">Ver detalhes</a>
                                 </div>
                             </div>
                         </div>
@@ -117,7 +118,7 @@
                                     <p class="card-text"><span>R$ <script>
                                         document.write((${carro.preco}).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
                                     </script></span></p>
-                                    <a href="carro?action=view&id=${carro.id}" class="btn btn-primary">Ver detalhes</a>
+                                    <a href="carro?action=view&id=${carro.id}" class="btn btn-warning">Ver detalhes</a>
                                 </div>
                             </div>
                         </div>

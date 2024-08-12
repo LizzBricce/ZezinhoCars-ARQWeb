@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<jsp:include page="templates/header.jsp" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,11 +9,12 @@
     <style>
         .form-container {
             max-width: 800px;
-            margin: auto;
+            margin: 1rem auto;
             padding: 20px;
-            border: 1px solid #ccc;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            -webkit-box-shadow: 4px 6px 29px 0px rgba(0,0,0,0.75);
+			-moz-box-shadow: 4px 6px 29px 0px rgba(0,0,0,0.75);
+			box-shadow: 4px 6px 29px 0px rgba(0,0,0,0.75);
             background-color: #fff;
         }
 
@@ -59,9 +61,8 @@
 </head>
 <body>
     <div class="container mt-5">
-        <a href="carro?action=list" class="btn btn-outline-primary btn-sm btn-back">Voltar para a Lista</a>
         <h2 class="text-center mb-4">${carro != null ? 'Editar Carro' : 'Adicionar Carro'}</h2>
-        <div class="form-container">
+        <div class="form-container border-yellow">
             <form action="carro" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="${carro != null ? 'edit' : 'add'}">
                 <c:if test="${carro != null}">
@@ -87,17 +88,26 @@
                     <div class="col">
                         <label for="categoria" class="form-label">Categoria:</label>
                         <select id="categoria" name="categoria" class="form-select" required>
+                            <option value="" ${carro != null && carro.categoria == null ? 'selected' : ''}>Selecione</option>
                             <option value="0" ${carro != null && carro.categoria == 'SUV' ? 'selected' : ''}>SUV</option>
                             <option value="1" ${carro != null && carro.categoria == 'HATCHBACK' ? 'selected' : ''}>HATCHBACK</option>
                             <option value="2" ${carro != null && carro.categoria == 'SEDAN' ? 'selected' : ''}>SEDAN</option>
+                            <option value="3" ${carro != null && carro.categoria == 'PICKUP' ? 'selected' : ''}>PICKUP</option>
+                            <option value="4" ${carro != null && carro.categoria == 'COUPE' ? 'selected' : ''}>COUPE</option>
+                            <option value="5" ${carro != null && carro.categoria == 'CONVERSIVEL' ? 'selected' : ''}>CONVERSÍVEL</option>
+                            <option value="6" ${carro != null && carro.categoria == 'PERUA' ? 'selected' : ''}>PERUA</option>
+                            <option value="7" ${carro != null && carro.categoria == 'ESPORTIVO' ? 'selected' : ''}>ESPORTIVO</option>
                         </select>
                     </div>
                     <div class="col">
                         <label for="tipoCombustivel" class="form-label">Tipo de Combustível:</label>
                         <select id="tipoCombustivel" name="tipoCombustivel" class="form-select" required>
+                            <option value="" ${carro != null && carro.tipoCombustivel == null ? 'selected' : ''}>Selecione</option>
                             <option value="0" ${carro != null && carro.tipoCombustivel == 'GASOLINA' ? 'selected' : ''}>GASOLINA</option>
-                            <option value="1" ${carro != null && carro.tipoCombustivel == 'ALCOOL' ? 'selected' : ''}>ALCOOL</option>
-                            <option value="2" ${carro != null && carro.tipoCombustivel == 'DISEL' ? 'selected' : ''}>DISEL</option>
+                            <option value="1" ${carro != null && carro.tipoCombustivel == 'ALCOOL' ? 'selected' : ''}>ÁLCOOL</option>
+                            <option value="2" ${carro != null && carro.tipoCombustivel == 'DIESEL' ? 'selected' : ''}>DIESEL</option>
+                            <option value="3" ${carro != null && carro.tipoCombustivel == 'HIBRIDO' ? 'selected' : ''}>HÍBRIDO</option>
+                            <option value="4" ${carro != null && carro.tipoCombustivel == 'ELETRICO' ? 'selected' : ''}>ELÉTRICO</option>
                         </select>
                     </div>
                 </div>
@@ -150,7 +160,7 @@
 
                 <div class="d-flex justify-content-between mt-4">
                     <button type="submit" class="btn btn-submit">${carro != null ? 'Atualizar' : 'Adicionar'}</button>
-                    <button type="reset" class="btn btn-outline-danger">Limpar</button>
+                    <button type="reset" class="btn btn-danger">Limpar</button>
                 </div>
             </form>
         </div>
