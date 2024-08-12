@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -40,6 +41,9 @@ public class CarroController extends HttpServlet {
             case "list":
                 listarCarros(request, response);
                 break;
+            case "view":
+                visualizarCarro(request, response);
+                break;
             case "edit":
                 mostrarFormularioEdicao(request, response);
                 break;
@@ -76,8 +80,42 @@ public class CarroController extends HttpServlet {
     private void listarCarros(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<Carro> carros = carroDao.getCarros();
-        request.setAttribute("carros", carros);
+
+        List<Carro> carrosEmOferta = new ArrayList<>();
+        List<Carro> carrosLancamentos = new ArrayList<>();
+        List<Carro> carrosDestaque = new ArrayList<>();
+        List<Carro> todosOsCarros = new ArrayList<>();
+
+        for (Carro carro : carros) {
+            if (carro.getOferta()) {
+                carrosEmOferta.add(carro);
+            }
+            
+            if (carro.getLancamento()) {
+                carrosLancamentos.add(carro);
+            }
+            
+            if (carro.getDestaque()) {
+                carrosDestaque.add(carro);
+            }
+            
+        	todosOsCarros.add(carro);
+        }
+
+        request.setAttribute("carrosEmOferta", carrosEmOferta);
+        request.setAttribute("carrosLancamentos", carrosLancamentos);
+        request.setAttribute("carrosDestaque", carrosDestaque);
+        request.setAttribute("todosOsCarros", todosOsCarros);
+
         request.getRequestDispatcher("carro-list.jsp").forward(request, response);
+    }
+    
+    private void visualizarCarro(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    	int id = Integer.parseInt(request.getParameter("id"));
+        Carro carro = carroDao.getById(id);
+        request.setAttribute("carro", carro);
+        request.getRequestDispatcher("carro-view.jsp").forward(request, response);
     }
 
     private void mostrarFormularioEdicao(HttpServletRequest request, HttpServletResponse response)
