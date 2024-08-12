@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class User implements Serializable {
-	private static long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	private static int contador = 0;
 		
 	private int id;	
@@ -15,7 +15,7 @@ public class User implements Serializable {
 	private Boolean adm;
 	
 	private User() {
-		this.id = ++this.contador;
+		this.id = this.contador++;
 	}
 
 	private User(String nome, String email, String senha, Boolean adm) {
@@ -69,24 +69,6 @@ public class User implements Serializable {
     public void setAdm(Boolean adm) {
         this.adm = adm;
     }
-    
-    public String toCsv() {
-        return id + ";" + nome + ";" + email + ";" + senha + ";" + adm;
-    }
-    
-    public static String hashSenha(String senha) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashBytes = md.digest(senha.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hashBytes) {
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Erro ao criptografar a senha", e);
-        }
-    }
 
 	
 	public static class Builder {
@@ -113,7 +95,7 @@ public class User implements Serializable {
 		}
 		
 		public Builder senha(String senha) {
-			this.senha = hashSenha(senha);
+			this.senha = senha;
 			return this;
 		}
 		
@@ -127,6 +109,21 @@ public class User implements Serializable {
 		}
 	}
 	
-    
+    public String toCsv() {
+        return id + ";" + nome + ";" + email + ";" + senha + ";" + adm;
+    }
+    public String hashSenha(String senha) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = md.digest(senha.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashBytes) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Erro ao criptografar a senha", e);
+        }
+    }
 	
 }
