@@ -4,10 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-1yoH5Fb6udkTX4P7s/qU1EJb1a9E+xM2omLKP/JyEtdIkQeXJRu7Pbt6z1f5TxK4Rso4pFlH2SStHpEJQd3Hg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-1yoH5Fb6udkTX4P7s/qU1EJb1a9E+xM2omLKP/JyEtdIkQeXJRu7Pbt6z1f5TxK4Rso4pFlH2SStHpEJQd3Hg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-	    <style>
+    <style>
         .border-yellow{
             border: 2px solid #ffc107; 
         }
@@ -41,10 +40,18 @@
 	               </li>
                 </c:if>
                 <c:if test="${not empty user}">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark hover-yellow" href="logout">Logout</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-dark hover-yellow" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            ${user.nome}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="logout">Logout</a></li>
+                            <c:if test="${user.adm}">
+                                <li><a class="dropdown-item" href="carro-form.jsp">Cadastrar Carro</a></li>
+                            </c:if>
+                        </ul>
                     </li>
-                 </c:if>
+                </c:if>
                 <c:if test="${empty user}">
                     <li class="nav-item">
                         <a class="nav-link text-dark hover-yellow" href="login.jsp">Login</a>
