@@ -28,7 +28,6 @@
 </head>
 <body>
     <div class="container mt-5">
-        <c:if test="${not empty user.email}"><a href="carro-form.jsp" class="btn btn-primary mb-4">Adicionar Novo Carro</a></c:if>
         
         <div class="section-header">Carros em Oferta</div>
         <c:choose>
