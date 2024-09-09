@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Formulário de Carro</title>
+    <link
+      href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" src="./adicionarCarro.js" defer></script>
+    <style>
+      .form-container {
+        max-width: 800px;
+        margin: 1rem auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 4px 6px 29px rgba(0, 0, 0, 0.75);
+        background-color: #fff;
+      }
+
+      .work-sans {
+        font-family: "Work Sans", sans-serif;
+      }
+
+      #menu-toggle:checked + #menu {
+        display: block;
+      }
+
+      .hover\:grow {
+        transition: all 0.3s;
+        transform: scale(1);
+      }
+
+      .hover\:grow:hover {
+        transform: scale(1.02);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <nav id="header" class="w-full z-30 top-0 py-1"></nav>
+      <div
+        class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-6 py-3"
+      >
+        <label for="menu-toggle" class="cursor-pointer md:hidden block">
+          <svg
+            class="fill-current text-gray-900"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+          >
+            <title>menu</title>
+            <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
+          </svg>
+        </label>
+        <input class="hidden" type="checkbox" id="menu-toggle" />
+
+        <div
+          class="hidden md:flex md:items-center md:w-auto w-full order-3 md:order-1"
+          id="menu"
+        >
+          <nav>
+            <ul
+              class="md:flex items-center justify-between text-base text-gray-700 pt-4 md:pt-0"
+            >
+              <li>
+                <a
+                  class="inline-block no-underline hover:text-black hover:underline py-2 px-4"
+                  href="./index.html"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  class="inline-block no-underline hover:text-black hover:underline py-2 px-4"
+                  href="#sobre"
+                  >Sobre nós</a
+                >
+              </li>
+              <li>
+                <a
+                  class="inline-block no-underline hover:text-black hover:underline py-2 px-4"
+                  href="./adicionarCarro.html"
+                  >Cadastrar Carro</a
+                >
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="order-1 md:order-2">
+          <a
+            class="flex items-center tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl"
+            href="#"
+          >
+            <img src="./img/car.png" width="24" height="24" alt="carro-logo" />
+            ZezinhoCars
+          </a>
+        </div>
+
+        <div class="order-2 md:order-3 flex items-center" id="nav-content">
+          <a
+            class="inline-block no-underline hover:text-black"
+            href="/profile.html"
+          >
+            <svg
+              class="fill-current hover:text-black"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <circle fill="none" cx="12" cy="7" r="3" />
+              <path
+                d="M12 2C9.243 2 7 4.243 7 7s2.243 5 5 5 5-2.243 5-5S14.757 2 12 2zM12 10c-1.654 0-3-1.346-3-3s1.346-3 3-3 3 1.346 3 3S13.654 10 12 10zM21 21v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h2v-1c0-2.757 2.243-5 5-5h4c2.757 0 5 2.243 5 5v1H21z"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div class="container mx-auto mt-5">
+      <h2 class="text-center text-2xl font-bold mb-6">
+        Adicionar/Editar Carro
+      </h2>
+      <div class="form-container border border-yellow-500">
+        <form action="carro" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="action" value="add" />
+          <input type="hidden" id="carId" name="id" />
+        	<input type="hidden" name="action" id="formAction" value="add" />
+
+          <div class="mb-4">
+            <label
+              for="avaliacao"
+              class="block text-sm font-medium text-gray-700"
+              >Avaliação:</label
+            >
+            <input
+              type="number"
+              id="avaliacao"
+              name="avaliacao"
+              min="1"
+              max="10"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="preco" class="block text-sm font-medium text-gray-700"
+              >Preço:</label
+            >
+            <input
+              type="number"
+              step="0.01"
+              id="preco"
+              name="preco"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="km" class="block text-sm font-medium text-gray-700"
+              >Quilometragem:</label
+            >
+            <input
+              type="number"
+              id="km"
+              name="km"
+              min="1"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              required
+            />
+          </div>
+
+          <div class="flex mb-4">
+            <div class="flex-1 mr-2">
+              <label
+                for="categoria"
+                class="block text-sm font-medium text-gray-700"
+                >Categoria:</label
+              >
+              <select
+                id="categoria"
+                name="categoria"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                required
+              >
+                <option value="">Selecione</option>
+                <option value="0">SUV</option>
+                <option value="1">HATCHBACK</option>
+                <option value="2">SEDAN</option>
+                <option value="3">PICKUP</option>
+                <option value="4">COUPE</option>
+                <option value="5">CONVERSÍVEL</option>
+                <option value="6">PERUA</option>
+                <option value="7">ESPORTIVO</option>
+              </select>
+            </div>
+            <div class="flex-1 ml-2">
+              <label
+                for="tipoCombustivel"
+                class="block text-sm font-medium text-gray-700"
+                >Tipo de Combustível:</label
+              >
+              <select
+                id="tipoCombustivel"
+                name="tipoCombustivel"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                required
+              >
+                <option value="">Selecione</option>
+                <option value="0">GASOLINA</option>
+                <option value="1">ÁLCOOL</option>
+                <option value="2">DIESEL</option>
+                <option value="3">HÍBRIDO</option>
+                <option value="4">ELÉTRICO</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="marca" class="block text-sm font-medium text-gray-700"
+              >Marca:</label
+            >
+            <input
+              type="text"
+              id="marca"
+              name="marca"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="modelo" class="block text-sm font-medium text-gray-700"
+              >Modelo:</label
+            >
+            <input
+              type="text"
+              id="modelo"
+              name="modelo"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label
+              for="anoFabricacao"
+              class="block text-sm font-medium text-gray-700"
+              >Ano de Fabricação:</label
+            >
+            <input
+              type="text"
+              id="anoFabricacao"
+              name="anoFabricacao"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="cor" class="block text-sm font-medium text-gray-700"
+              >Cor:</label
+            >
+            <input
+              type="text"
+              id="cor"
+              name="cor"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <fieldset class="flex gap-6">
+              <legend class="text-sm font-medium text-gray-700">
+                Marque as opções:
+              </legend>
+              <div class="flex items-center">
+                <input
+                  type="checkbox"
+                  id="destaque"
+                  name="destaque"
+                  class="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                />
+                <label
+                  for="destaque"
+                  class="ml-2 text-sm font-medium text-gray-700"
+                  >Destaque</label
+                >
+              </div>
+              <div class="flex items-center">
+                <input
+                  type="checkbox"
+                  id="lancamento"
+                  name="lancamento"
+                  class="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                />
+                <label
+                  for="lancamento"
+                  class="ml-2 text-sm font-medium text-gray-700"
+                  >Lançamento</label
+                >
+              </div>
+              <div class="flex items-center">
+                <input
+                  type="checkbox"
+                  id="oferta"
+                  name="oferta"
+                  class="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                />
+                <label
+                  for="oferta"
+                  class="ml-2 text-sm font-medium text-gray-700"
+                  >Oferta</label
+                >
+              </div>
+            </fieldset>
+          </div>
+
+          <!-- imagem -->
+
+          <div class="flex items-center justify-center w-full">
+            <label
+              for="dropzone-file"
+              class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+            >
+              <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                <svg
+                  class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 16"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                  />
+                </svg>
+                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                  <span class="font-semibold">Clique para enviar</span>
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  SVG, PNG ou JPG
+                </p>
+              </div>
+              <input id="dropzone-file" type="file" class="hidden" />
+            </label>
+          </div>
+
+          <img
+            id="image-preview"
+            src=""
+            alt="Imagem Pré-visualização"
+            class="mt-4 w-full h-64 object-cover border-2 border-gray-300 rounded-lg"
+          />
+
+          <div class="flex justify-between mt-6">
+            <button
+              type="submit"
+              class="px-4 py-2 bg-green-600 text-white rounded-md shadow-sm hover:bg-green-700"
+            >
+              Adicionar/Atualizar
+            </button>
+            <button
+              type="reset"
+              class="px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-red-700"
+            >
+              Limpar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

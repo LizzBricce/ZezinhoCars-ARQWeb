@@ -15,16 +15,18 @@ public class CarroDao {
 
     private final String arquivoCSV = "C:\\Users\\lucas\\dev\\dados\\carros.csv";
 
-    public void addCarro(Carro c) {
+    public boolean addCarro(Carro c) {
         try {
             FileWriter fw = new FileWriter(arquivoCSV, true);
             PrintWriter pw = new PrintWriter(fw);
             pw.println(c.toCsv());
             pw.close();
             fw.close();
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public List<Carro> getCarros() {
@@ -80,7 +82,7 @@ public class CarroDao {
         return null;
     }
 
-    public void editCarro(Carro carro) {
+    public boolean editCarro(Carro carro) {
         List<Carro> carros = getCarros();
 
         for (Carro c : carros) {
@@ -102,10 +104,10 @@ public class CarroDao {
             }
         }
 
-        writeCarros(carros);
+        return writeCarros(carros);
     }
 
-    private void writeCarros(List<Carro> carros) {
+    private boolean writeCarros(List<Carro> carros) {
         try {
             FileWriter fw = new FileWriter(arquivoCSV, false);
             PrintWriter pw = new PrintWriter(fw);
@@ -114,12 +116,14 @@ public class CarroDao {
             }
             pw.close();
             fw.close();
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
-    public void deleteCarro(int id) {
+    public boolean deleteCarro(int id) {
         List<Carro> carros = getCarros();
 
         List<Carro> carrosAtualizados = new ArrayList<>();
@@ -130,6 +134,20 @@ public class CarroDao {
             }
         }
 
-        writeCarros(carrosAtualizados);
+        return writeCarros(carrosAtualizados);
     }
+    
+    public List<Carro> getByModelo(String modelo) {
+        List<Carro> carros = getCarros();
+        List<Carro> carrosFiltrados = new ArrayList<>();
+
+        for (Carro carro : carros) {
+            if (carro.getModelo().toLowerCase().contains(modelo.toLowerCase())) {
+                carrosFiltrados.add(carro);
+            }
+        }
+
+        return carrosFiltrados;
+    }
+
 }

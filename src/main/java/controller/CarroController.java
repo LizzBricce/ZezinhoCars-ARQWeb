@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+
+import com.google.gson.Gson;
+
 import dao.CarroDao;
 import model.Carro;
 import model.Carro.Builder;
@@ -36,7 +39,6 @@ public class CarroController extends HttpServlet {
         if (action == null || action.equals("")) {
             action = "list";
         }
-        
 
         switch (action) {
             case "list":
@@ -45,11 +47,8 @@ public class CarroController extends HttpServlet {
             case "view":
                 visualizarCarro(request, response);
                 break;
-            case "edit":
-                mostrarFormularioEdicao(request, response);
-                break;
-            case "delete":
-                deletarCarro(request, response);
+            case "searchByModel":  
+                buscarCarrosPorModelo(request, response);
                 break;
             default:
                 listarCarros(request, response);
@@ -67,92 +66,72 @@ public class CarroController extends HttpServlet {
 
         switch (action) {
             case "add":
-                adicionarCarro(request, response);
-                break;
             case "edit":
-                atualizarCarro(request, response);
-                break;
+                salvarCarro(request, response);
             default:
                 listarCarros(request, response);
                 break;
         }
     }
 
-    private void listarCarros(HttpServletRequest request, HttpServletResponse response)
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Carro> carros = carroDao.getCarros();
-
-        List<Carro> carrosEmOferta = new ArrayList<>();
-        List<Carro> carrosLancamentos = new ArrayList<>();
-        List<Carro> carrosDestaque = new ArrayList<>();
-        List<Carro> todosOsCarros = new ArrayList<>();
-
-        for (Carro carro : carros) {
-            if (carro.getOferta()) {
-                carrosEmOferta.add(carro);
-            }
-            
-            if (carro.getLancamento()) {
-                carrosLancamentos.add(carro);
-            }
-            
-            if (carro.getDestaque()) {
-                carrosDestaque.add(carro);
-            }
-            
-        	todosOsCarros.add(carro);
-        }
-
-        request.setAttribute("carrosEmOferta", carrosEmOferta);
-        request.setAttribute("carrosLancamentos", carrosLancamentos);
-        request.setAttribute("carrosDestaque", carrosDestaque);
-        request.setAttribute("todosOsCarros", todosOsCarros);
-
-        request.getRequestDispatcher("carro-list.jsp").forward(request, response);
+        deletarCarro(request, response);
     }
     
-    private void visualizarCarro(HttpServletRequest request, HttpServletResponse response)
+    protected void listarCarros(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    	int id = Integer.parseInt(request.getParameter("id"));
-        Carro carro = carroDao.getById(id);
-        request.setAttribute("carro", carro);
-        request.getRequestDispatcher("carro-view.jsp").forward(request, response);
+        List<Carro> carros = carroDao.getCarros();
+        Gson gson = new Gson();
+        String jsonResponse = gson.toJson(carros);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(jsonResponse);
     }
-
-    private void mostrarFormularioEdicao(HttpServletRequest request, HttpServletResponse response)
+    
+    protected void visualizarCarro(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Carro carro = carroDao.getById(id);
-        request.setAttribute("carro", carro);
-        request.getRequestDispatcher("carro-form.jsp").forward(request, response);
+        Gson gson = new Gson();
+        String jsonResponse = gson.toJson(carro);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(jsonResponse);
     }
 
-    private void adicionarCarro(HttpServletRequest request, HttpServletResponse response)
+    protected void buscarCarrosPorModelo(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Carro carro = construirCarroAPartirDoRequest(request);
-        System.out.println(carro.toString());
-        carroDao.addCarro(carro);
-        response.sendRedirect("carro?action=list");
+        String modelo = request.getParameter("modelo");
+        List<Carro> carros = carroDao.getByModelo(modelo);
+        
+        Gson gson = new Gson();
+        String jsonResponse = gson.toJson(carros);
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(jsonResponse);
     }
 
-    private void atualizarCarro(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Carro carro = construirCarroAPartirDoRequest(request);
-        carroDao.editCarro(carro);
-        response.sendRedirect("carro?action=list");
-    }
-
-    private void deletarCarro(HttpServletRequest request, HttpServletResponse response)
+    protected void deletarCarro(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        Carro carro = carroDao.getById(id);
-        if (carro != null) {
-            carroDao.deleteCarro(id);
+        boolean success = carroDao.deleteCarro(id);
+
+        String jsonResponse;
+        if (success) {
+            jsonResponse = "{\"message\": \"Carro deletado com sucesso.\"}";
+        } else {
+            jsonResponse = "{\"error\": \"Erro ao deletar o carro.\"}";
         }
-        response.sendRedirect("carro?action=list");
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(jsonResponse);
     }
 
-    private Carro construirCarroAPartirDoRequest(HttpServletRequest request) throws IOException, ServletException {
+    protected void salvarCarro(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         int id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : 0;
         int avaliacao = Integer.parseInt(request.getParameter("avaliacao"));
         double preco = Double.parseDouble(request.getParameter("preco"));
@@ -174,13 +153,13 @@ public class CarroController extends HttpServlet {
             byte[] imagemBytes = fileContent.readAllBytes();
             imagemBase64 = Base64.getEncoder().encodeToString(imagemBytes);
         }
-        
-        if(imagemBase64 == null && id != 0) {
-        	Carro infos = carroDao.getById(id);
-        	imagemBase64 = infos.getImagemBase64();
+
+        if (imagemBase64 == null && id != 0) {
+            Carro infos = carroDao.getById(id);
+            imagemBase64 = infos.getImagemBase64();
         }
 
-        Builder builder = new Carro.Builder()
+        Carro carro = new Carro.Builder()
                 .id(id)
                 .avaliacao(avaliacao)
                 .preco(preco)
@@ -194,8 +173,27 @@ public class CarroController extends HttpServlet {
                 .destaque(destaque)
                 .lancamento(lancamento)
                 .oferta(oferta)
-                .imagem(imagemBase64);
+                .imagem(imagemBase64)
+                .build();
 
-        return builder.build();
+        boolean success;
+        if (id == 0) {
+            success = carroDao.addCarro(carro);
+        } else {
+            success = carroDao.editCarro(carro);
+        }
+
+        String jsonResponse;
+        if (success) {
+            jsonResponse = "{\"message\": \"Carro salvo com sucesso.\"}";
+        } else {
+            jsonResponse = "{\"error\": \"Erro ao salvar o carro.\"}";
+        }
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(jsonResponse);
     }
 }
+
+

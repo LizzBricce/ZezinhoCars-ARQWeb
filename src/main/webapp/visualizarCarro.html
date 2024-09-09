@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pr-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Visualização de Veículo</title>
+    <script src="./viewCarro.js" type="module" defer></script>
+    
+    <style>
+    	 .work-sans {
+        font-family: "Work Sans", sans-serif;
+      }
+
+      #menu-toggle:checked + #menu {
+        display: block;
+      }
+
+      .hover\:grow {
+        transition: all 0.3s;
+        transform: scale(1);
+      }
+
+      .hover\:grow:hover {
+        transform: scale(1.02);
+      }
+    </style>
+  </head>
+  <body>
+    <nav id="header" class="w-full z-30 top-0 py-1">
+      <div
+        class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-6 py-3"
+      >
+        <label for="menu-toggle" class="cursor-pointer md:hidden block">
+          <svg
+            class="fill-current text-gray-900"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+          >
+            <title>menu</title>
+            <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
+          </svg>
+        </label>
+        <input class="hidden" type="checkbox" id="menu-toggle" />
+
+        <div
+          class="hidden md:flex md:items-center md:w-auto w-full order-3 md:order-1"
+          id="menu"
+        >
+          <nav>
+            <ul
+              class="md:flex items-center justify-between text-base text-gray-700 pt-4 md:pt-0"
+            >
+              <li>
+                <a
+                  class="inline-block no-underline hover:text-black hover:underline py-2 px-4"
+                  href="./index.html"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  class="inline-block no-underline hover:text-black hover:underline py-2 px-4"
+                  href="#sobre"
+                  >Sobre nós</a
+                >
+              </li>
+              <li>
+                <a
+                  class="inline-block no-underline hover:text-black hover:underline py-2 px-4"
+                  href="./adicionarCarro.html"
+                  >Cadastrar Carro</a
+                >
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="order-1 md:order-2">
+          <a
+            class="flex items-center tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl"
+            href="#"
+          >
+            <img src="./img/car.png" width="24" height="24" alt="carro-logo" />
+            ZezinhoCars
+          </a>
+        </div>
+
+        <div class="order-2 md:order-3 flex items-center" id="nav-content">
+          <a
+            class="inline-block no-underline hover:text-black"
+            href="/profile.html"
+          >
+            <svg
+              class="fill-current hover:text-black"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <circle fill="none" cx="12" cy="7" r="3" />
+              <path
+                d="M12 2C9.243 2 7 4.243 7 7s2.243 5 5 5 5-2.243 5-5S14.757 2 12 2zM12 10c-1.654 0-3-1.346-3-3s1.346-3 3-3 3 1.346 3 3S13.654 10 12 10zM21 21v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h2v-1c0-2.757 2.243-5 5-5h4c2.757 0 5 2.243 5 5v1H21z"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div class="font-sans bg-white">
+      <div class="p-4 lg:max-w-7xl max-w-4xl mx-auto">
+        <div
+          class="grid items-start grid-cols-1 lg:grid-cols-5 gap-12 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] p-6 rounded-lg"
+        >
+          <div class="lg:col-span-3 w-full lg:sticky top-0 text-center">
+            <div
+              class="px-4 py-10 rounded-lg shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] relative"
+            >
+              <img
+                id="car-image"
+                src=""
+                alt="Carro"
+                class="w-3/4 rounded object-cover mx-auto"
+              />
+            </div>
+          </div>
+
+          <div class="lg:col-span-2">
+            <h2 id="car-model" class="text-2xl font-extrabold text-gray-800">
+              Modelo do Carro
+            </h2>
+
+            <div class="flex flex-wrap gap-4 mt-8">
+              <p id="car-price" class="text-gray-800 text-3xl font-bold">
+                Valor do carro
+              </p>
+              <p id="car-discount" class="text-gray-400 text-base">
+                <strike id="car-original-price">VALOR ORIGINAL</strike>
+                <span id="offer-text" class="text-sm ml-1">EM OFERTA</span>
+              </p>
+            </div>
+
+            <div class="flex flex-wrap gap-4 mt-8">
+              <a
+                id="edit-button"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              >
+                Editar
+              </a>
+
+              <button
+                id="delete-button"
+                type="button"
+                class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
+              >
+                Deletar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-16 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] p-6">
+          <h3 class="text-xl font-bold text-gray-800">Informações do Carro</h3>
+          <ul id="car-details" class="mt-4 space-y-6 text-gray-800">
+            <!-- Informações do carro preenchidas dinamicamente aqui -->
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
